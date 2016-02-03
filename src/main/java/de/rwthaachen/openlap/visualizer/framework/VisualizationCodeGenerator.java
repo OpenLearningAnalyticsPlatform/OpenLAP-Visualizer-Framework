@@ -1,12 +1,12 @@
-package visualizer.framework;
+package de.rwthaachen.openlap.visualizer.framework;
 
 import DataSet.OLAPDataSet;
 import DataSet.OLAPDataSetConfigurationValidationResult;
 import DataSet.OLAPPortConfiguration;
-import visualizer.framework.exceptions.DataSetValidationException;
-import visualizer.framework.exceptions.UnTransformableData;
-import visualizer.framework.exceptions.VisualizationCodeGenerationException;
-import visualizer.framework.model.TransformedData;
+import de.rwthaachen.openlap.visualizer.framework.exceptions.DataSetValidationException;
+import de.rwthaachen.openlap.visualizer.framework.exceptions.UnTransformableData;
+import de.rwthaachen.openlap.visualizer.framework.exceptions.VisualizationCodeGenerationException;
+import de.rwthaachen.openlap.visualizer.framework.model.TransformedData;
 
 public abstract class VisualizationCodeGenerator {
 

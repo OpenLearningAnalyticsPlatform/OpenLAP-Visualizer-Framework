@@ -1,4 +1,4 @@
-package visualizer.framework.exceptions;
+package de.rwthaachen.openlap.visualizer.framework.exceptions;
 
 public class VisualizationCodeGenerationException extends RuntimeException {
 

@@ -1,7 +1,7 @@
-package visualizer.framework;
+package de.rwthaachen.openlap.visualizer.framework;
 
 import DataSet.OLAPDataSet;
-import visualizer.framework.model.TransformedData;
+import de.rwthaachen.openlap.visualizer.framework.model.TransformedData;
 
 public interface DataTransformer {
 
