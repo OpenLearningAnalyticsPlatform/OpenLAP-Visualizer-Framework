@@ -13,13 +13,12 @@ public abstract class VisualizationCodeGenerator {
     private OLAPDataSet input;
     private OLAPDataSet output;
 
-    protected VisualizationCodeGenerator() {
-        initializeDataSetConfiguration();
-    }
-
     protected abstract void initializeDataSetConfiguration();
 
     public boolean isDataProcessable(OLAPPortConfiguration olapPortConfiguration) throws DataSetValidationException {
+        if(input ==null || output==null)
+            initializeDataSetConfiguration();
+
         OLAPDataSetConfigurationValidationResult validationResult = input.validateConfiguration(olapPortConfiguration);
         if (validationResult.isValid())
             return true;
@@ -30,6 +29,9 @@ public abstract class VisualizationCodeGenerator {
     protected abstract String visualizationCode(TransformedData transformedData);
 
     public String generateVisualizationCode(OLAPDataSet olapDataSet, DataTransformer dataTransformer) throws VisualizationCodeGenerationException {
+        if(input==null || output==null)
+            initializeDataSetConfiguration();
+
         TransformedData transformedData = dataTransformer.transformData(olapDataSet);
         if (transformedData == null)
             //TODO
