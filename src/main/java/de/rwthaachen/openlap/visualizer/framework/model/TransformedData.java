@@ -1,8 +1,14 @@
 package de.rwthaachen.openlap.visualizer.framework.model;
 
-/**
- * Created by bas on 12/6/15.
- */
-public class TransformedData{
+public class TransformedData<T>{
 
+    private T dataContent;
+
+    public T getDataContent() {
+        return dataContent;
+    }
+
+    public void setDataContent(T dataContent) {
+        this.dataContent = dataContent;
+    }
 }

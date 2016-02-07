@@ -26,7 +26,7 @@ public abstract class VisualizationCodeGenerator {
             throw new DataSetValidationException(validationResult.getValidationMessage());
     }
 
-    protected abstract String visualizationCode(TransformedData transformedData);
+    protected abstract String visualizationCode(TransformedData<?> transformedData);
 
     public String generateVisualizationCode(OLAPDataSet olapDataSet, DataTransformer dataTransformer) throws VisualizationCodeGenerationException {
         if(input==null || output==null)
