@@ -32,7 +32,7 @@ public abstract class VisualizationCodeGenerator {
         if(input==null || output==null)
             initializeDataSetConfiguration();
 
-        TransformedData transformedData = dataTransformer.transformData(olapDataSet);
+        TransformedData<?> transformedData = dataTransformer.transformData(olapDataSet);
         if (transformedData == null)
             //TODO
             throw new UnTransformableData("Data could not be transformed"); //add a json dump of olapdataset
