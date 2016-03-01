@@ -19,6 +19,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.xeustechnologies</groupId>
+            <artifactId>jcl-core</artifactId>
+            <version>2.7</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.OpenLearningAnalyticsPlatform</groupId>
             <artifactId>OpenLAP-DataSet</artifactId>
             <version>v1.1</version>
