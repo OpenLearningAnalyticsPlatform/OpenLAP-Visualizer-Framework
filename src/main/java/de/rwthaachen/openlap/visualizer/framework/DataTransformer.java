@@ -4,6 +4,11 @@ import DataSet.OLAPDataSet;
 import de.rwthaachen.openlap.visualizer.framework.exceptions.UnTransformableData;
 import de.rwthaachen.openlap.visualizer.framework.model.TransformedData;
 
+/**
+ * The interface which defines the methods of a DataTransformer which the concrete implementations should implement
+ *
+ * @author Bassim Bashir
+ */
 public interface DataTransformer {
 
     /**
