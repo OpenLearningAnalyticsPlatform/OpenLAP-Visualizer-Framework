@@ -89,7 +89,7 @@ The two abstract methods that need to be overriden are:
         }
         stringBuilder.append(" ]);"+
                 "var options = {" +
-                "title: 'Sport Activities Hours Per Week'" +
+                "title: 'Wiki Posts by Platform'" +
                 "};" +
                 "var chart = new google.visualization.PieChart(document.getElementById('chart'));" +
                 "chart.draw(data, options);" +
