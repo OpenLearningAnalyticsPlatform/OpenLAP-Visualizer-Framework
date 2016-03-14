@@ -163,5 +163,5 @@ The overall process of creating and uploading new `VisualizationMethods` and `Da
 ```
 If you look at the example configuration above you can see that there are multiple implementations of the OpenLAP-Visualizer-Framework that can be uploaded in a single go. The configuration specifies which `VisualizationMethod` uses which `DataTransformer` along with other information.
     </li>
-    <li>The OpenLAP-Visualizer after verifying your upload will make it available for all clients. If the upload fails for any reason then you will be notified as to cause of the failure.</li>
+    <li>The OpenLAP-Visualizer after verifying your upload will make it available for all clients. If the upload fails for any reason then you will be notified as to cause of the failure. Reasons for failure could be due to a malformed manifest configuration json provided with the upload or if the "implementingClassName" of a VisualizationMethod already exists (i.e. it was previously uploaded) etc.</li>
 <ol>
