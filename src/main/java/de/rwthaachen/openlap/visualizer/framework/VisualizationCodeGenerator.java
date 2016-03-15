@@ -8,6 +8,8 @@ import de.rwthaachen.openlap.visualizer.framework.exceptions.UnTransformableData
 import de.rwthaachen.openlap.visualizer.framework.exceptions.VisualizationCodeGenerationException;
 import de.rwthaachen.openlap.visualizer.framework.model.TransformedData;
 
+import java.util.HashMap;
+
 /**
  * The abstract class which needs to be extended in order to add new concrete visualization methods
  * The abstract method "initializeDataSetConfiguration" should be overriden with the input OLAPDataSet configuration for the visualization method being implemented.
@@ -33,9 +35,9 @@ public abstract class VisualizationCodeGenerator {
             throw new DataSetValidationException(validationResult.getValidationMessage());
     }
 
-    protected abstract String visualizationCode(TransformedData<?> transformedData) throws VisualizationCodeGenerationException;
+    protected abstract String visualizationCode(TransformedData<?> transformedData, HashMap<String, Object> additionalParams) throws VisualizationCodeGenerationException;
 
-    public String generateVisualizationCode(OLAPDataSet olapDataSet, DataTransformer dataTransformer) throws VisualizationCodeGenerationException, UnTransformableData {
+    public String generateVisualizationCode(OLAPDataSet olapDataSet, DataTransformer dataTransformer, HashMap<String, Object> additionalParams) throws VisualizationCodeGenerationException, UnTransformableData {
         if (input == null || output == null)
             initializeDataSetConfiguration();
 
@@ -43,7 +45,7 @@ public abstract class VisualizationCodeGenerator {
         if (transformedData == null)
             throw new UnTransformableData("Data could not be transformed");
         else
-            return visualizationCode(transformedData);
+            return visualizationCode(transformedData, additionalParams);
     }
 
     public OLAPDataSet getInput() {
