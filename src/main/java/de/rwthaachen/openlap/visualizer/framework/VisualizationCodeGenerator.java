@@ -43,7 +43,7 @@ public abstract class VisualizationCodeGenerator {
 
         TransformedData<?> transformedData = dataTransformer.transformData(olapDataSet);
         if (transformedData == null)
-            throw new UnTransformableData("Data could not be transformed");
+            throw new UnTransformableData("Data could not be transformed.");
         else
             return visualizationCode(transformedData, additionalParams);
     }
