@@ -19,3 +19,4 @@ public interface DataTransformer {
     TransformedData<?> transformData(OLAPDataSet olapDataSet) throws UnTransformableData;
 
 }
+
