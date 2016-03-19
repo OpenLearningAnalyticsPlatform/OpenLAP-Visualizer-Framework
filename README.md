@@ -2,15 +2,12 @@
 
 ## Introduction
 
-The OpenLAP-Visualizer-Framework provides the API which needs to be implemented by Developers/Researchers to add new `VisualizationMethods` and `DataTransformers`
-for a `VisualizationFramework` to the RWTH's OpenLAP Visualizer. The concrete implementations of this framework can be packed and uploaded to the 
-Visualizer (link to Visualizer Core documentation) via an endpoint to be made available for all the users of the OpenLAP. 
+The OpenLAP-Visualizer-Framework provides the API which needs to be implemented by Developers/Researchers to add new visualizations to the OpenLAP-Visualizer. The concrete implementations of this framework can be packed and uploaded to the 
+OpenLAP-Visualizer via an endpoint to be made available for all the users of the OpenLAP. 
 
 ## Framework Internals
 
-The OpenLAP-Visualizer follows the same principles as the entire OpenLAP and that is to be modular and extensible which gives the Developers/Researchers the possibility to add new 
-`DataTransformers` and `VisualizationMethods` along with their `VisualizationFrameworks` to the Visualizer component. The uploaded bundled JAR containing the concrete implementation of this
-framework is picked up the Visualizer for any further client requests. The framework consists of an abstract class `VisualizationCodeGenerator` and an interface `DataTransformer`. 
+The OpenLAP-Visualizer follows the same principles as the entire OpenLAP and that is to be modular and extensible which gives the Developers/Researchers the possibility to add new `DataTransformers` and `VisualizationMethods` along with their `VisualizationFrameworks` to the OpenLAP-Visualizer component. The framework consists of an abstract class `VisualizationCodeGenerator` and an interface `DataTransformer`. 
 Before going further into details, here is a list of terminologies which will be helpful to understand this guide:
 <ul>
     <li><strong>VisualizationFramework</strong> : A web visualization library/framework which can be utilized to create interactive visualizations. For example, d3.js, dygraphs etc.</li>
@@ -21,9 +18,7 @@ Before going further into details, here is a list of terminologies which will be
 
 
 #### VisualizationCodeGenerator
-This abstract class is part of the OpenLAP-Visualizer-Framework and has to be extended by the Developer if he/she wishes to add a new VisualizationMethod. The abstract class already contains some logic which makes
-sure to perform some checks before calling the relevant concrete implementations of the abstract methods, furthermore to call the methods in the correct order. The listing belows shows an excerpt of the VisualizationCodeGenerator
-abstract class:
+This abstract class is part of the OpenLAP-Visualizer-Framework and has to be extended by the Developer if he/she wishes to add a new VisualizationMethod. The abstract class already contains some logic which makes sure to perform some checks before calling the relevant concrete implementations of the abstract methods. Furthermore to call the methods in the correct order. The listing below shows an excerpt of the VisualizationCodeGenerator abstract class:
 
 ```java
 public abstract class VisualizationCodeGenerator {
@@ -65,8 +60,8 @@ The two abstract methods that need to be overriden are:
      }
 ```
  <li>visualizationCode</li>
- The concrete implementations of this abstract method provide the actual visualization code that is send back to the client by the Visualizer. The parameter that of this method is an instance of `TransformedData` which contains the data
- which was transformed in the format that the `VisualizationCodeGenerator` expects from the `OLAPDataSet` received from the client. The example below illustrates how to provide a concrete implementation of the `visualizationCode` abstract method:
+ The concrete implementations of this abstract method provide the actual visualization code that is send back to the client by the OpenLAP-Visualizer. The parameter that of this method is an instance of `TransformedData` which contains the data
+ which was transformed in the format that the `VisualizationCodeGenerator` expects from the `OLAPDataSet`. The example below illustrates how to provide a concrete implementation of the `visualizationCode` abstract method:
 ```java
     @Override
     protected String visualizationCode(TransformedData<?> transformedData) {
@@ -89,7 +84,7 @@ The two abstract methods that need to be overriden are:
         }
         stringBuilder.append(" ]);"+
                 "var options = {" +
-                "title: 'Sport Activities Hours Per Week'" +
+                "title: 'Wiki Posts by Platform'" +
                 "};" +
                 "var chart = new google.visualization.PieChart(document.getElementById('chart'));" +
                 "chart.draw(data, options);" +
@@ -143,7 +138,7 @@ The overall process of creating and uploading new `VisualizationMethods` and `Da
     <li>Create a starter project by using Maven archetype project <a href="https://github.com/OpenLearningAnalyticsPlatform/OpenLAP-Visualizer-Starter">OpenLAP-Visualizer-Starter</a> </li>
     <li>Implement `VisualizationCodeGenerators` and `DataTransformers` based on your requirements</li>
     <li>Package your concrete implementations as a JAR bundle</li>
-    <li>Upload the JAR bundle using a REST client to the Visualizer along with providing the configuration. The configuration is provided in the form of JSON and contains details of which `VisualizationCodeGenerator` and `DataTransformer` are being uploaded.
+    <li>Upload the JAR bundle using a REST client to the OpenLAP-Visualizer along with providing the configuration. The configuration is provided in the form of JSON and contains details of which `VisualizationCodeGenerator` and `DataTransformer` are being uploaded.
         An example configuration is shown below:
 ```                
         {
@@ -166,8 +161,7 @@ The overall process of creating and uploading new `VisualizationMethods` and `Da
           ]
         }       
 ```
-</br>      
-        For further information on the parameters refer to the source code <a href="https://github.com/OpenLearningAnalyticsPlatform/OpenLAP-Visualizer-Core/blob/master/src/main/java/de/rwthaachen/openlap/visualizer/dtos/request/UploadVisualizationFrameworksRequest.java">Visualization Frameworks Upload Request</a>
+If you look at the example configuration above you can see that there are multiple implementations of the OpenLAP-Visualizer-Framework that can be uploaded in a single go. The configuration specifies which `VisualizationMethod` uses which `DataTransformer` along with other information.
     </li>
-    <li>The Visualizer after verifying your upload will make it available for all clients</li>
+    <li>The OpenLAP-Visualizer after verifying your upload will make it available for all clients. If the upload fails for any reason then you will be notified as to cause of the failure. Reasons for failure could be due to a malformed manifest configuration json provided with the upload or if the "implementingClassName" of a VisualizationMethod already exists (i.e. it was previously uploaded) etc.</li>
 <ol>
