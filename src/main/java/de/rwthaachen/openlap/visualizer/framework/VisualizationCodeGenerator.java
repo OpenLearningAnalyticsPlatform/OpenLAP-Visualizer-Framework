@@ -22,6 +22,10 @@ public abstract class VisualizationCodeGenerator {
     private OLAPDataSet input;
     private OLAPDataSet output;
 
+    protected VisualizationCodeGenerator(){
+        initializeDataSetConfiguration();
+    }
+
     protected abstract void initializeDataSetConfiguration();
 
     public boolean isDataProcessable(OLAPPortConfiguration olapPortConfiguration) throws DataSetValidationException {
