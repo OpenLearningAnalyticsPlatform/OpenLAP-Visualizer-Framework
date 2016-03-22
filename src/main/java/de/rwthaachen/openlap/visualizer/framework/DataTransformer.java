@@ -16,7 +16,7 @@ public interface DataTransformer {
      *                    dataset that is understood by the visualization code
      * @return null if the data could not be transformed
      */
-    TransformedData<?> transformData(OLAPDataSet olapDataSet) throws UnTransformableData;
+    String transformData(OLAPDataSet olapDataSet) throws UnTransformableData;
 
 }
 
