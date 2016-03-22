@@ -65,6 +65,8 @@ public abstract class VisualizationCodeGenerator {
     }
 
     public String getInputAsJsonString(){
+        if (input == null)
+            initializeDataSetConfiguration();
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             return objectMapper.writeValueAsString(this.input);
