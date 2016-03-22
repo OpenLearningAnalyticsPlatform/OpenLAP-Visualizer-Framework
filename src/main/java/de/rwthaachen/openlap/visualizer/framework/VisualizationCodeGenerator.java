@@ -37,17 +37,17 @@ public abstract class VisualizationCodeGenerator {
             throw new DataSetValidationException(validationResult.getValidationMessage());
     }
 
-    protected abstract String visualizationCode(String transformedDataJson, Map<String, Object> additionalParams) throws VisualizationCodeGenerationException;
+    protected abstract String visualizationCode(TransformedData<?> transformedData, Map<String, Object> additionalParams) throws VisualizationCodeGenerationException;
 
     public String generateVisualizationCode(OLAPDataSet olapDataSet, DataTransformer dataTransformer, Map<String, Object> additionalParams) throws VisualizationCodeGenerationException, UnTransformableData {
         if (input == null)
             initializeDataSetConfiguration();
 
-        String transformedDataJson = dataTransformer.transformData(olapDataSet);
-        if (transformedDataJson == null)
+        TransformedData<?> transformedData = dataTransformer.transformData(olapDataSet);
+        if (transformedData == null)
             throw new UnTransformableData("Data could not be transformed.");
         else
-            return visualizationCode(transformedDataJson, additionalParams);
+            return visualizationCode(transformedData, additionalParams);
     }
 
     public OLAPDataSet getInput() {
