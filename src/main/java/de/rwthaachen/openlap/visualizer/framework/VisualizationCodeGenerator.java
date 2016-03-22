@@ -64,6 +64,15 @@ public abstract class VisualizationCodeGenerator {
         return output;
     }
 
+    public String getOutputAsJsonString() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(this.output);
+        }catch (JsonProcessingException | NullPointerException exception){
+            return "";
+        }
+    }
+
     public String getInputAsJsonString(){
         if (input == null)
             initializeDataSetConfiguration();
