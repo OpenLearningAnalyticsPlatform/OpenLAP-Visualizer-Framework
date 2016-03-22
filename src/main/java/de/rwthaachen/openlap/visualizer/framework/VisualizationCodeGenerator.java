@@ -3,6 +3,8 @@ package de.rwthaachen.openlap.visualizer.framework;
 import DataSet.OLAPDataSet;
 import DataSet.OLAPDataSetConfigurationValidationResult;
 import DataSet.OLAPPortConfiguration;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.rwthaachen.openlap.visualizer.framework.exceptions.DataSetValidationException;
 import de.rwthaachen.openlap.visualizer.framework.exceptions.UnTransformableData;
 import de.rwthaachen.openlap.visualizer.framework.exceptions.VisualizationCodeGenerationException;
@@ -60,6 +62,16 @@ public abstract class VisualizationCodeGenerator {
 
     public OLAPDataSet getOutput() {
         return output;
+    }
+
+    public String getInputAsJsonString(){
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writeValueAsString(this.input);
+        }catch (JsonProcessingException exception){
+            return "";
+        }
+
     }
 
     public void setOutput(OLAPDataSet output) {
