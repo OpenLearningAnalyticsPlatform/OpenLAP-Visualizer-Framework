@@ -3,6 +3,7 @@ package de.rwthaachen.openlap.visualizer.framework;
 import DataSet.OLAPDataSet;
 import DataSet.OLAPDataSetConfigurationValidationResult;
 import DataSet.OLAPPortConfiguration;
+import DataSet.OLAPPortMapping;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.rwthaachen.openlap.visualizer.framework.exceptions.DataSetValidationException;
@@ -39,15 +40,24 @@ public abstract class VisualizationCodeGenerator {
 
     protected abstract String visualizationCode(TransformedData<?> transformedData, Map<String, Object> additionalParams) throws VisualizationCodeGenerationException;
 
-    public String generateVisualizationCode(OLAPDataSet olapDataSet, DataTransformer dataTransformer, Map<String, Object> additionalParams) throws VisualizationCodeGenerationException, UnTransformableData {
+    public String generateVisualizationCode(OLAPDataSet olapDataSet, OLAPPortConfiguration portConfiguration, DataTransformer dataTransformer, Map<String, Object> additionalParams) throws VisualizationCodeGenerationException, UnTransformableData, DataSetValidationException {
         if (input == null)
             initializeDataSetConfiguration();
-
-        TransformedData<?> transformedData = dataTransformer.transformData(olapDataSet);
-        if (transformedData == null)
-            throw new UnTransformableData("Data could not be transformed.");
-        else
-            return visualizationCode(transformedData, additionalParams);
+        // is the configuration valid?
+        if(isDataProcessable(portConfiguration)) {
+            // for each configuration element of the configuration
+            for (OLAPPortMapping mappingEntry:portConfiguration.getMapping()) {
+                // map the data of the column c.id==element.id to the input
+                input.getColumns().get(mappingEntry.getInputPort().getId()).setData(olapDataSet.getColumns().get(mappingEntry.getOutputPort().getId()).getData());
+            }
+            TransformedData<?> transformedData = dataTransformer.transformData(input);
+            if (transformedData == null)
+                throw new UnTransformableData("Data could not be transformed.");
+            else
+                return visualizationCode(transformedData, additionalParams);
+        }else{
+            return "Data could not be transformed.";
+        }
     }
 
     public OLAPDataSet getInput() {
