@@ -135,10 +135,12 @@ The sample below shows a concrete implementation of the `DataTransformer` interf
 ## Usage Guide
 The overall process of creating and uploading new `VisualizationMethods` and `DataTransformers` is as follows:
 <ol>
-    <li>Create a starter project by using Maven archetype project <a href="https://github.com/OpenLearningAnalyticsPlatform/OpenLAP-Visualizer-Starter">OpenLAP-Visualizer-Starter</a> </li>
-    <li>Implement `VisualizationCodeGenerators` and `DataTransformers` based on your requirements</li>
-    <li>Package your concrete implementations as a JAR bundle</li>
-    <li>Upload the JAR bundle using a REST client to the OpenLAP-Visualizer along with providing the configuration. The configuration is provided in the form of JSON and contains details of which `VisualizationCodeGenerator` and `DataTransformer` are being uploaded.
+    <li>Create a starter project by using Maven archetype project <a href="https://github.com/OpenLearningAnalyticsPlatform/OpenLAP-Visualizer-Starter">OpenLAP-Visualizer-Starter</a>. Or Import the dependency into a new Java project. </li>
+    <li>Create a class that extends the `VisualizationCodeGenerator` and another class which extends `DataTransformer`.</li>
+    <li>Declare the input `OLAPDataSet` in the class that extends the `VisualizationCodeGenerator`.<\li>
+    <li>Implement the abstract methods of both abstract classes.</li>
+    <li>Package the binaries of the implementations as a JAR bundle</li>
+    <li>Upload the JAR bundle using a REST client to the OpenLAP-Visualizer along with the configuration. The configuration is provided in the form of JSON and contains details of which `VisualizationCodeGenerator` and `DataTransformer` are being uploaded.
         An example configuration is shown below:
 ```                
         {
