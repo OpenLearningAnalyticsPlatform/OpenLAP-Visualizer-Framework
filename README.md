@@ -2,8 +2,13 @@
 
 ## Introduction
 
-The OpenLAP-Visualizer-Framework provides the API which needs to be implemented by Developers/Researchers to add new visualizations to the OpenLAP-Visualizer. The concrete implementations of this framework can be packed and uploaded to the 
-OpenLAP-Visualizer via an endpoint to be made available for all the users of the OpenLAP. 
+The OpenLAP-Visualizer-Framework provides the classes which needs to be implemented by Developers/Researchers to add new visualizations to the OpenLAP. The following video gives the introduction to Open Learning Analytics Platform (OpenLAP) following with the step by step video guide to adding new visualizations to OpenLAP.
+
+<p align="center">
+	<a href="http://www.youtube.com/watch?feature=player_embedded&v=e6dwtO0mneo" target="_blank">
+		<img src="http://img.youtube.com/vi/e6dwtO0mneo/0.jpg" alt="OpenLAP Introduction and New Visualizer"/>
+	</a>
+</p>
 
 ## Framework Internals
 
