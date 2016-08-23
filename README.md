@@ -55,7 +55,6 @@ The two abstract methods that need to be overriden are:
      @Override
      protected void initializeDataSetConfiguration() {
          this.setInput(new OLAPDataSet());
-         this.setOutput(new OLAPDataSet());
          this.getInput().addOLAPDataColumn(
               OLAPDataColumnFactory.createOLAPDataColumnOfType("xAxisStrings", OLAPColumnDataType.STRING, true)
          );
