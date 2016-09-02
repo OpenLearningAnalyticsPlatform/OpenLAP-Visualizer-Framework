@@ -6,9 +6,9 @@ The OpenLAP-Visualizer-Framework provides the classes which needs to be implemen
 
 <p align="center">
 	<a href="http://www.youtube.com/watch?feature=player_embedded&v=e6dwtO0mneo" target="_blank">
-		<img src="http://lanzarote.informatik.rwth-aachen.de/openlap/img/others/visualizer.png" width=480 alt="OpenLAP Introduction and New Visualizer"/>
-		<br>
 		<span><strong>Video Tutorial to add new Visualization techniques to OpenLAP</strong></span>
+		<br>
+		<img src="http://lanzarote.informatik.rwth-aachen.de/openlap/img/others/visualizer.png" width=480 alt="OpenLAP Introduction and New Visualizer"/>
 	</a>
 </p>
 
