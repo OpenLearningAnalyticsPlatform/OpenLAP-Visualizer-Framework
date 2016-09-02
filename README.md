@@ -22,6 +22,46 @@ Before going further into details, here is a list of terminologies which will be
     <li><strong>VisualizationMethod</strong> : A concrete interactive visualization, for example, bar chart, pie chart etc.</li>
 </ul>
 
+### Importing into a project
+
+**Step 1.** The JitPack repository must be added to the build file:
+
+Maven:
+```xml
+<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+</repositories>
+```
+Gradle:
+```gradle
+allprojects {
+    repositories {
+        ...
+        maven { url "https://jitpack.io" }
+    }
+}
+```
+
+**Step 2.**  The dependency must be added:
+
+Maven:
+```xml
+	<dependency>
+	    <groupId>com.github.OpenLearningAnalyticsPlatform</groupId>
+	    <artifactId>OpenLAP-AnalyticsMethodsFramework</artifactId>
+	    <version>v2.0</version>
+	</dependency>
+```
+Gradle:
+```gradle
+dependencies {
+	        compile 'com.github.OpenLearningAnalyticsPlatform:OpenLAP-AnalyticsMethodsFramework:v2.0'
+}
+```
+
 #### DataTransformer
 The `DataTransformer` is an integral part of the OpenLAP-Visualizer-Framework as it transforms data from the `OLAPDataSet` into structure expected by `VisualizationCodeGenerators`. A single `DataTransformer` could be used
 by many `VisualizationCodeGenerators`. The `DataTransformer` interface lists all the methods that need to be implemented by a concrete implementation, which is shown below:
