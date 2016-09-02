@@ -62,6 +62,10 @@ public abstract class VisualizationCodeGenerator {
         }
     }
 
+    public String getVisualizationLibraryScript(){
+        return visualizationLibraryScript();
+    }
+
     public OLAPDataSet getInput() {
         if (input == null)
             initializeDataSetConfiguration();
