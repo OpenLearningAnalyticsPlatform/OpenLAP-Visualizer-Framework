@@ -73,12 +73,13 @@ The two abstract methods that need to be overriden are:
 
         long postfix = (new Date()).getTime();
 
-	//Additional parameters will be sent using the Map<String, Object> map object. Following are the ones which are available currently.
+		//Additional parameters will be sent using the Map<String, Object> map object. Following are the ones which are available currently.
         int width = (map.containsKey("width")) ? Integer.parseInt(map.get("width").toString()) : 500;
         int height = (map.containsKey("height")) ? Integer.parseInt(map.get("height").toString()) : 350;
         String xLabel = (map.containsKey("xLabel")) ? map.get("xLabel").toString() : "";
         String yLabel = (map.containsKey("yLabel")) ? map.get("yLabel").toString() : "";
 
+		//Start generating the final output for visualizating the indicator
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<script type='text/javascript'> var data_" + postfix + " = google.visualization.arrayToDataTable([['Title','Count'],");
 
