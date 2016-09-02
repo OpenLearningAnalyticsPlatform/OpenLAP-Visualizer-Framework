@@ -56,10 +56,10 @@ The two abstract methods that need to be overriden are:
      protected void initializeDataSetConfiguration() {
          this.setInput(new OLAPDataSet());
          this.getInput().addOLAPDataColumn(
-              OLAPDataColumnFactory.createOLAPDataColumnOfType("xAxisStrings", OLAPColumnDataType.STRING, true)
+              OLAPDataColumnFactory.createOLAPDataColumnOfType("xAxisStrings", OLAPColumnDataType.STRING, true, "X-Axis Items", "List of items to be displayed on X-Axis of the graph")
          );
          this.getInput().addOLAPDataColumn(
-              OLAPDataColumnFactory.createOLAPDataColumnOfType("yAxisValues", OLAPColumnDataType.INTEGER, true)
+              OLAPDataColumnFactory.createOLAPDataColumnOfType("yAxisValues", OLAPColumnDataType.INTEGER, true, "Y-Axis Values", "List of items to be displayed on Y-Axis of the graph")
          );
      }
 ```
@@ -69,31 +69,29 @@ The two abstract methods that need to be overriden are:
 ```java
     @Override
     protected String visualizationCode(TransformedData<?> transformedData) {
-        TransformedGooglePieChartData transformedGooglePieChartData = (TransformedGooglePieChartData)transformedData.getDataContent();
+        List<Pair<String, Integer>> transformedPairList = (List<Pair<String, Integer>>)transformedData.getDataContent();
+
+        long postfix = (new Date()).getTime();
+
+        int width = (map.containsKey("width")) ? Integer.parseInt(map.get("width").toString()) : 500;
+        int height = (map.containsKey("height")) ? Integer.parseInt(map.get("height").toString()) : 350;
+
+        String xLabel = (map.containsKey("xLabel")) ? map.get("xLabel").toString() : "";
+        String yLabel = (map.containsKey("yLabel")) ? map.get("yLabel").toString() : "";
+
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<div id=\"chart\" style=\"width: 900px; height: 500px;\"></div>");
-        stringBuilder.append("<script type=\"text/javascript\" src=\"https://www.gstatic.com/charts/loader.js\"></script>" +
-                "<script type=\"text/javascript\">");
-        stringBuilder.append("google.charts.load('current', {'packages':['corechart']});" +
-                "google.charts.setOnLoadCallback(drawChart);\n" +
-                "function drawChart() {" +
-                "var data = google.visualization.arrayToDataTable([");
-        int count=0;
-        for(String xValue : transformedGooglePieChartData.getLabels()) {
-            if(count == transformedGooglePieChartData.getLabels().size())
-                stringBuilder.append("['" + xValue + "','" + transformedGooglePieChartData.getFrequencies().get(count)+"']");
-            else
-                stringBuilder.append("['" + xValue + "','" + transformedGooglePieChartData.getFrequencies().get(count)+"'],");
-            count++;
+        stringBuilder.append("<script type='text/javascript'> var data_" + postfix + " = google.visualization.arrayToDataTable([['Title','Count'],");
+
+        for(Pair<String, Integer> pair: transformedPairList) {
+            stringBuilder.append("['" + pair.getKey() + "'," + pair.getValue() + "],");
         }
-        stringBuilder.append(" ]);"+
-                "var options = {" +
-                "title: 'Wiki Posts by Platform'" +
-                "};" +
-                "var chart = new google.visualization.PieChart(document.getElementById('chart'));" +
-                "chart.draw(data, options);" +
-                "}" +
-                "</script>");
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        stringBuilder.append(" ]);");
+        stringBuilder.append("var options_" + postfix + " = {is3D:true, vAxis:{title:'" + yLabel + "'}, hAxis:{title:'" + xLabel + "'}, chartArea:{width: '95%', height: '" + (height - 75) + "', left:'50', top:'10'}, legend:{ position:'none' }, width: " + (width - 10) + ", height: " + (height - 10) + ", backgroundColor: { fill:'transparent' }};");
+        stringBuilder.append("var chart_" + postfix + " = new google.visualization.ColumnChart(document.getElementById('chartdiv_" + postfix + "'));google.visualization.events.addListener(chart_" + postfix + ", 'ready', function (){$('#chartdiv_" + postfix + " > div:first-child > div:nth-child(2)').css({ top: '1px', left:'1px'});});chart_" + postfix + ".draw(data_" + postfix + ", options_" + postfix + ");");
+        stringBuilder.append("</script>");
+        stringBuilder.append("<div id='chartdiv_" + postfix + "'></div>");
+
         return stringBuilder.toString();
     }
 ```
@@ -116,22 +114,30 @@ public interface DataTransformer {
 The sample below shows a concrete implementation of the `DataTransformer` interface:
 ```java
     @Override
-    public TransformedData<?> transformData(OLAPDataSet olapDataSet) {
-        TransformedGooglePieChartData transformedGooglePieChartData = new TransformedGooglePieChartData();
-        olapDataSet.getColumnsAsList(true).forEach(olapDataColumn -> {
-            //in this Data transformer y axis contains only INTEGERS
-            if (olapDataColumn.getConfigurationData().getType().equals(OLAPColumnDataType.INTEGER)) {
-                ArrayList<String> frequencies = new ArrayList<>();
-                for (Object data : olapDataColumn.getData()) {
-                  frequencies.add(data.toString());
-                }
-                transformedGooglePieChartData.setFrequencies(frequencies);
+    public TransformedData<?> transformData(OLAPDataSet olapDataSet) throws UnTransformableData {
+        List<OLAPDataColumn> columns = olapDataSet.getColumnsAsList(true);
+        List<Pair<String, Integer>> data;
+
+        List<String> labels = null;
+        List<Integer> frequencies = null;
+
+        data = new ArrayList<Pair<String, Integer>>();
+
+        for(OLAPDataColumn column: columns) {
+            if (column.getConfigurationData().getType().equals(OLAPColumnDataType.INTEGER)) {
+                frequencies = column.getData();
             } else {
-                transformedGooglePieChartData.setLabels(olapDataColumn.getData());
+                labels = column.getData();
             }
-        });
-        TransformedData<TransformedGooglePieChartData> transformedData = new TransformedData<>();
-        transformedData.setDataContent(transformedGooglePieChartData);
+        }
+
+        if(labels != null) {
+            for (int i = 0; i < labels.size(); i++) {
+                data.add(new Pair<String, Integer>(labels.get(i), frequencies.get(i)));
+            }
+        }
+        TransformedData<List<Pair<String, Integer>>> transformedData = new TransformedData<List<Pair<String, Integer>>>();
+        transformedData.setDataContent(data);
         return transformedData;
     }
 ```
@@ -152,14 +158,22 @@ The overall process of creating and uploading new `VisualizationMethods` and `Da
             {
               "name": "Google Charts",
               "creator": "Bassim Bashir",
-              "description": "A framework providing great visualizations",
+              "description": "A framework to providing visualizations using Google Charts library",
               "visualizationMethods": [
                 {
                   "name": "Pie Chart",
                   "implementingClass": "de.rwthaachen.openlap.GooglePieChartVisualizationCodeGenerator",
                   "dataTransformerMethod": {
-                    "name": "Pie Chart DataTransformer",
-                    "implementingClass": "de.rwthaachen.openlap.PieChartDataTransformer"
+                    "name": "Chart DataTransformer",
+                    "implementingClass": "de.rwthaachen.openlap.ChartDataTransformer"
+                  }
+                },
+                {
+                  "name": "Bar Chart",
+                  "implementingClass": "de.rwthaachen.openlap.GoogleBarChartVisualizationCodeGenerator",
+                  "dataTransformerMethod": {
+                    "name": "Chart DataTransformer",
+                    "implementingClass": "de.rwthaachen.openlap.ChartDataTransformer"
                   }
                 }
               ]
