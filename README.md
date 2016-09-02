@@ -12,17 +12,7 @@ The OpenLAP-Visualizer-Framework provides the classes which needs to be implemen
 	</a>
 </p>
 
-## Framework Internals
-
-The OpenLAP-Visualizer follows the same principles as the entire OpenLAP and that is to be modular and extensible which gives the Developers/Researchers the possibility to add new `DataTransformers` and `VisualizationMethods` along with their `VisualizationFrameworks` to the OpenLAP-Visualizer component. The framework consists of an abstract class `VisualizationCodeGenerator` and an interface `DataTransformer`. 
-Before going further into details, here is a list of terminologies which will be helpful to understand this guide:
-<ul>
-    <li><strong>VisualizationFramework</strong> : A web visualization library/framework which can be utilized to create interactive visualizations. For example, d3.js, dygraphs etc.</li>
-    <li><strong>DataTransformer</strong> : A concrete implementation which transforms data received from the client in the form of the OLAPDataSet into a structure understandable by the VisualizationMethod that uses it</li>
-    <li><strong>VisualizationMethod</strong> : A concrete interactive visualization, for example, bar chart, pie chart etc.</li>
-</ul>
-
-### Importing into a project
+## Setting up the project
 
 **Step 1.** The JitPack repository must be added to the build file:
 
@@ -61,6 +51,16 @@ dependencies {
 	        compile 'com.github.OpenLearningAnalyticsPlatform:OpenLAP-Visualizer-Framework:v2.0'
 }
 ```
+
+## Framework Internals
+
+The OpenLAP-Visualizer follows the same principles as the entire OpenLAP and that is to be modular and extensible which gives the Developers/Researchers the possibility to add new `DataTransformers` and `VisualizationMethods` along with their `VisualizationFrameworks` to the OpenLAP-Visualizer component. The framework consists of an abstract class `VisualizationCodeGenerator` and an interface `DataTransformer`. 
+Before going further into details, here is a list of terminologies which will be helpful to understand this guide:
+<ul>
+    <li><strong>VisualizationFramework</strong> : A web visualization library/framework which can be utilized to create interactive visualizations. For example, d3.js, dygraphs etc.</li>
+    <li><strong>DataTransformer</strong> : A concrete implementation which transforms data received from the client in the form of the OLAPDataSet into a structure understandable by the VisualizationMethod that uses it</li>
+    <li><strong>VisualizationMethod</strong> : A concrete interactive visualization, for example, bar chart, pie chart etc.</li>
+</ul>
 
 #### DataTransformer
 The `DataTransformer` is an integral part of the OpenLAP-Visualizer-Framework as it transforms data from the `OLAPDataSet` into structure expected by `VisualizationCodeGenerators`. A single `DataTransformer` could be used
