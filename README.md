@@ -16,11 +16,55 @@ The OpenLAP-Visualizer follows the same principles as the entire OpenLAP and tha
 Before going further into details, here is a list of terminologies which will be helpful to understand this guide:
 <ul>
     <li><strong>VisualizationFramework</strong> : A web visualization library/framework which can be utilized to create interactive visualizations. For example, d3.js, dygraphs etc.</li>
+    <li><strong>DataTransformer</strong> : A concrete implementation which transforms data received from the client in the form of the OLAPDataSet into a structure understandable by the VisualizationMethod that uses it</li>
     <li><strong>VisualizationMethod</strong> : A concrete interactive visualization, for example, bar chart, pie chart etc.</li>
-    <li><strong>DataTransformer</strong> : A concrete implementation which transforms data received from the client in the form of the OLAPDataSet into a structure understandable by
-      the VisualizationMethod that uses it</li>
 </ul>
 
+#### DataTransformer
+The `DataTransformer` is an integral part of the OpenLAP-Visualizer-Framework as it transforms data from the `OLAPDataSet` into structure expected by `VisualizationCodeGenerators`. A single `DataTransformer` could be used
+by many `VisualizationCodeGenerators`. The `DataTransformer` interface lists all the methods that need to be implemented by a concrete implementation, which is shown below:
+```java
+public interface DataTransformer {
+
+    /**
+     * @param olapDataSet The dataset which needs to be transformed in a
+     *                    structure that is understood by the visualization code
+     * @return null if the data could not be transformed
+     * */
+    TransformedData<?> transformData(OLAPDataSet olapDataSet) throws UnTransformableData;
+
+}
+```
+The sample below shows a concrete implementation of the `DataTransformer` interface:
+```java
+    @Override
+    public TransformedData<?> transformData(OLAPDataSet olapDataSet) throws UnTransformableData {
+        List<OLAPDataColumn> columns = olapDataSet.getColumnsAsList(true);
+        List<Pair<String, Integer>> data;
+
+        List<String> labels = null;
+        List<Integer> frequencies = null;
+
+        data = new ArrayList<Pair<String, Integer>>();
+
+        for(OLAPDataColumn column: columns) {
+            if (column.getConfigurationData().getType().equals(OLAPColumnDataType.INTEGER)) {
+                frequencies = column.getData();
+            } else {
+                labels = column.getData();
+            }
+        }
+
+        if(labels != null) {
+            for (int i = 0; i < labels.size(); i++) {
+                data.add(new Pair<String, Integer>(labels.get(i), frequencies.get(i)));
+            }
+        }
+        TransformedData<List<Pair<String, Integer>>> transformedData = new TransformedData<List<Pair<String, Integer>>>();
+        transformedData.setDataContent(data);
+        return transformedData;
+    }
+```
 
 #### VisualizationCodeGenerator
 This abstract class is part of the OpenLAP-Visualizer-Framework and has to be extended by the Developer if he/she wishes to add a new VisualizationMethod. The abstract class already contains some logic which makes sure to perform some checks before calling the relevant concrete implementations of the abstract methods. Furthermore to call the methods in the correct order. The listing below shows an excerpt of the VisualizationCodeGenerator abstract class:
@@ -97,51 +141,6 @@ The two abstract methods that need to be overriden are:
     }
 ```
  </ul>
-#### DataTransformer
-The `DataTransformer` is an integral part of the OpenLAP-Visualizer-Framework as it transforms data from the `OLAPDataSet` into structure expected by `VisualizationCodeGenerators`. A single `DataTransformer` could be used
-by many `VisualizationCodeGenerators`. The `DataTransformer` interface lists all the methods that need to be implemented by a concrete implementation, which is shown below:
-```java
-public interface DataTransformer {
-
-    /**
-     * @param olapDataSet The dataset which needs to be transformed in a
-     *                    structure that is understood by the visualization code
-     * @return null if the data could not be transformed
-     * */
-    TransformedData<?> transformData(OLAPDataSet olapDataSet) throws UnTransformableData;
-
-}
-```
-The sample below shows a concrete implementation of the `DataTransformer` interface:
-```java
-    @Override
-    public TransformedData<?> transformData(OLAPDataSet olapDataSet) throws UnTransformableData {
-        List<OLAPDataColumn> columns = olapDataSet.getColumnsAsList(true);
-        List<Pair<String, Integer>> data;
-
-        List<String> labels = null;
-        List<Integer> frequencies = null;
-
-        data = new ArrayList<Pair<String, Integer>>();
-
-        for(OLAPDataColumn column: columns) {
-            if (column.getConfigurationData().getType().equals(OLAPColumnDataType.INTEGER)) {
-                frequencies = column.getData();
-            } else {
-                labels = column.getData();
-            }
-        }
-
-        if(labels != null) {
-            for (int i = 0; i < labels.size(); i++) {
-                data.add(new Pair<String, Integer>(labels.get(i), frequencies.get(i)));
-            }
-        }
-        TransformedData<List<Pair<String, Integer>>> transformedData = new TransformedData<List<Pair<String, Integer>>>();
-        transformedData.setDataContent(data);
-        return transformedData;
-    }
-```
 
 ## Usage Guide
 The overall process of creating and uploading new `VisualizationMethods` and `DataTransformers` is as follows:
