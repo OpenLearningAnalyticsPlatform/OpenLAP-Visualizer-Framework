@@ -68,14 +68,14 @@ The two abstract methods that need to be overriden are:
  which was transformed in the format that the `VisualizationCodeGenerator` expects from the `OLAPDataSet`. The example below illustrates how to provide a concrete implementation of the `visualizationCode` abstract method:
 ```java
     @Override
-    protected String visualizationCode(TransformedData<?> transformedData) {
+    protected String visualizationCode(TransformedData<?> transformedData, Map<String, Object> map) throws VisualizationCodeGenerationException {
         List<Pair<String, Integer>> transformedPairList = (List<Pair<String, Integer>>)transformedData.getDataContent();
 
         long postfix = (new Date()).getTime();
 
+	//Additional parameters will be sent using the Map<String, Object> map object. Following are the ones which are available currently.
         int width = (map.containsKey("width")) ? Integer.parseInt(map.get("width").toString()) : 500;
         int height = (map.containsKey("height")) ? Integer.parseInt(map.get("height").toString()) : 350;
-
         String xLabel = (map.containsKey("xLabel")) ? map.get("xLabel").toString() : "";
         String yLabel = (map.containsKey("yLabel")) ? map.get("yLabel").toString() : "";
 
