@@ -50,15 +50,15 @@ allprojects {
 Maven:
 ```xml
 	<dependency>
-	    <groupId>com.github.OpenLearningAnalyticsPlatform</groupId>
-	    <artifactId>OpenLAP-AnalyticsMethodsFramework</artifactId>
-	    <version>v2.0</version>
-	</dependency>
+            <groupId>com.github.OpenLearningAnalyticsPlatform</groupId>
+            <artifactId>OpenLAP-Visualizer-Framework</artifactId>
+            <version>v2.0</version>
+        </dependency>
 ```
 Gradle:
 ```gradle
 dependencies {
-	        compile 'com.github.OpenLearningAnalyticsPlatform:OpenLAP-AnalyticsMethodsFramework:v2.0'
+	        compile 'com.github.OpenLearningAnalyticsPlatform:OpenLAP-Visualizer-Framework:v2.0'
 }
 ```
 
