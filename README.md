@@ -331,7 +331,7 @@ The newly implemented visualization technique is now ready to be uploaded to the
 ** Data transformer name (E.g. Pairs List Data Transformer).
 ** Implementing class name including package that implements the `DataTransformer` interface class (E.g. de.rwthaachen.openlap.visualizers.googlecharts.DataTransformerPairList).
 
-Note: The same implemented `DataTransformer` can be used with the multiple Visualization methods. All you need to do is provide the new implementation of the ‘VisualizationCodeGenerator’ abstract class (E.g. Pie Chart) and pack it with the JAR Bundle. While uploading the jar file, provide two visualization methods with the same data transformer name and the Implementing class name as shown in an example below.
+<strong>Note:</strong> The same implemented `DataTransformer` can be used with the multiple Visualization methods. All you need to do is provide the new implementation of the ‘VisualizationCodeGenerator’ abstract class (E.g. Pie Chart) and pack it with the JAR Bundle. While uploading the jar file, provide two visualization methods with the same data transformer name and the Implementing class name as shown in an example below.
 ```                
 {
   "visualizationFrameworks": [
