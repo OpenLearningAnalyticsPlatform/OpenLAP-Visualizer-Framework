@@ -39,6 +39,7 @@ The main idea behind the Visualizer is to receive the incoming analyzed data in 
 	chart.draw(data, options);
 </script>
 ```
+
 The code consists of two main section, the `Visualization Library Script` section responsible for including the visualization library scripts on the webpage and the `Visualization Generation Script` section containing the code to generate the chart. The `Visualization Generation Script` section is further divided into three sub-sections: the `Visualization data` sub-section consists of the data to generate the graph. This section should always be generated dynamically based on the input data coming in the input `OLAPDataSet`. The `Visualization options` sub-section contains the options to define the chart. Which parameters can be customized is explained later in the step by step guide to implement new visualization technique. The `Visualization generation` section contains the scripts which uses the data and the options to generate the chart. This example is specifically using Google Charts to explain the concept, but any visualization technique can be categorized into these sections and implemented. 
 
 Before going further into the details, here is a list of terminologies which will be helpful to understand this guide and how they are interacting with each other:
@@ -48,7 +49,6 @@ Before going further into the details, here is a list of terminologies which wil
 * <strong>DataTransformer</strong>: A concrete implementation which transforms data received from the client in the form of the `OLAPDataSet` into a data structure understandable by the VisualizationMethod that uses it.
 
 * <strong>VisualizationMethod</strong>: A concrete interactive visualization type. E.g. bar chart, pie chart etc.
-
 
 
 To implement a new visualization technique, the developer must extend the abstract class `VisualizationCodeGenerator` and an interface `DataTransformer` available in the OpenLAP-Visualizer-Framework project. In the following sub-sections the OpenLAP-DataSet and the methods of these classes are explained in detail.
@@ -83,7 +83,7 @@ The `VisualizationCodeGenerator` abstract class has a series of methods that all
 The `DataTransformer` interface class provides a single method `transformData()` to be implemented which accept the `OLAPDataSet` as input parameter. The developers will implement the logic here to transform the incoming `OLAPDataSet` to any data structure which will be used by the `visualizationCode()` method of the ‘VisualizationCodeGenerator’ abstract class to generate the “Visualization Generation Script”. The return of this method is a class `TransformedData<T>` which contains a single object `dataContent` of type `<T>` to store the transformed data.
 
 
-#### Important Note
+### Important Note
 
 The concept of the abstract `VisualizationCodeGenerator` class and the `DataTransformer` interface should be clear from the above description. In the `VisualizationCodeGenerator` class the developer defines the input `OLAPDataSet` column configuration, the core logic to generate the “Visualization Generation Script”, and provide “Visualization Library Script”. Whereas, in the `DataTransformer` the developer implement the conversion of input `OLAPDataSet` to suitable data structure which can be used to generate “Visualization Generation Script” in the `VisualizationCodeGenerator` class. So the important point here is that the input `OLAPDataSet` is defined in the `VisualizationCodeGenerator` class but it is not used there. It is used in the `DataTransformer` and the transformed data from this interface class is then used in the `VisualizationCodeGenerator`.
 
@@ -184,7 +184,7 @@ public class BarChart extends VisualizationCodeGenerator {
     }
 }
 ```
-### Step 4. Define the input and output `OLAPDataSet`.
+### Step 4. Define the input `OLAPDataSet`.
 The input `OLAPDataSet` should be defined in the `initializeDataSetConfiguration()` method of the extended class `BarChart` as shown in the example below.
 
 ```java
@@ -224,7 +224,7 @@ public class DataTransformerPairList implements DataTransformer {
 ```
 
 ### Step 6. Implement the method of the `DataTransformer` interface.
-The `DataTransformer` interface class provide only one method to be implemented. The example below shows a sample implementation of the data transformer which accepts the input `OLAPDataSet` defined in the `initializeDataSetConfiguration()` method of the extended class `BarChart` in Step 4. This data transformer will transform this input `OLAPDataSet` in a list of string and integer pairs (List<Pair<String, Integer>>) and return it as an object of `TransformedData` class.
+The `DataTransformer` interface class provide only one method to be implemented. The example below shows a sample implementation of the data transformer which accepts the input `OLAPDataSet` defined in the `initializeDataSetConfiguration()` method of the extended class `BarChart` in Step 4. This data transformer will transform this input `OLAPDataSet` in a list of string and integer pairs (`List<Pair<String, Integer>>`) and return it as an object of `TransformedData` class.
 
 ```java
 public TransformedData<?> transformData(OLAPDataSet olapDataSet) throws UnTransformableData {
@@ -259,7 +259,7 @@ public TransformedData<?> transformData(OLAPDataSet olapDataSet) throws UnTransf
 ```
 
 ### Step 7. Implement the remaining abstract methods of the `VisualizationCodeGenerator` class.
-Two remaining abstract methods of the `VisualizationCodeGenerator` class should be implemented because now we have defined the `DataTransformer` and we know in what format the data will be available in the `visualizationCode()` method. The example below shows a sample implementation of the bar chart visualization technique using the Google Chart visualization framework to generate the “Visualization Generation Script”.
+Two remaining abstract methods of the `VisualizationCodeGenerator` class should be implemented because now we have defined the `DataTransformer` and we know in what format the data will be available in the `visualizationCode()` method. The example below shows a sample implementation of the Bar Chart visualization technique using the Google Chart visualization framework to generate the “Visualization Generation Script”.
 
 ```java
 @Override
@@ -269,11 +269,15 @@ protected String visualizationCode(TransformedData<?> transformedData, Map<Strin
     //This is used as a postfix for each variable name used in the javascript to avoid conflicts when having multiple visualizations on the same webpage.
     long postfix = (new Date()).getTime();
 
-    //The Map<String, Object> map input parameters provide additional parameters from the client side.
+    //The Map<String, Object> map input parameter provide additional parameters from the client side.
     //Currently the following four parameters are being provided which can be used as shown below.
+    //Width of the div in which the visualization will be displayed
     int width = (map.containsKey("width")) ? Integer.parseInt(map.get("width").toString()) : 500;
+    //Height of the div in which the visualization will be displayed
     int height = (map.containsKey("height")) ? Integer.parseInt(map.get("height").toString()) : 350;
+    //Title for the X-Axis
     String xLabel = (map.containsKey("xLabel")) ? map.get("xLabel").toString() : "";
+    //Title for the Y-Axis
     String yLabel = (map.containsKey("yLabel")) ? map.get("yLabel").toString() : "";
 
     //Generating the "Visualization Generation Script"
@@ -291,7 +295,7 @@ protected String visualizationCode(TransformedData<?> transformedData, Map<Strin
     stringBuilder.append("var options_" + postfix + " = {is3D:true, vAxis:{title:'" + yLabel + "'}, hAxis:{title:'" + xLabel + "'}, chartArea:{width: '95%', height: '" + (height - 75) + "', left:'50', top:'10'}, legend:{ position:'none' }, width: " + (width - 10) + ", height: " + (height - 10) + ", backgroundColor: { fill:'transparent' }};");
 
     //Adding the "Visualization generation" sub-section
-    stringBuilder.append("var chart_" + postfix + " = new google.visualization.ColumnChart(document.getElementById('chartdiv_" + postfix + "'));google.visualization.events.addListener(chart_" + postfix + ", 'ready', function (){$('#chartdiv_" + postfix + " > div:first-child > div:nth-child(2)').css({ top: '1px', left:'1px'});});chart_" + postfix + ".draw(data_" + postfix + ", options_" + postfix + ");");
+    stringBuilder.append("var chart_" + postfix + " = new google.visualization.ColumnChart(document.getElementById('chartdiv_" + postfix + "'));chart_" + postfix + ".draw(data_" + postfix + ", options_" + postfix + ");");
     stringBuilder.append("</script>");
     stringBuilder.append("<div id='chartdiv_" + postfix + "'></div>");
 
@@ -329,31 +333,31 @@ The newly implemented visualization technique is now ready to be uploaded to the
 
 Note: The same implemented `DataTransformer` can be used with the multiple Visualization methods. All you need to do is provide the new implementation of the ‘VisualizationCodeGenerator’ abstract class (E.g. Pie Chart) and pack it with the JAR Bundle. While uploading the jar file, provide two visualization methods with the same data transformer name and the Implementing class name as shown in an example below.
 ```                
+{
+  "visualizationFrameworks": [
+    {
+      "name": "Google Charts",
+      "creator": "OpenLAP Team",
+      "description": "A framework to providing visualizations using Google Charts library",
+      "visualizationMethods": [
         {
-          "visualizationFrameworks": [
-            {
-              "name": "Google Charts",
-              "creator": "OpenLAP Team",
-              "description": "A framework to providing visualizations using Google Charts library",
-              "visualizationMethods": [
-                {
-                  "name": "Pie Chart",
-                  "implementingClass": "de.rwthaachen.openlap.visualizers.googlecharts.PieChart",
-                  "dataTransformerMethod": {
-                    "name": "Pairs List Data Transformer",
-                    "implementingClass": "de.rwthaachen.openlap.visualizers.googlecharts.DataTransformerPairList"
-                  }
-                },
-                {
-                  "name": "Bar Chart",
-                  "implementingClass": "de.rwthaachen.openlap.visualizers.googlecharts.BarChart",
-                  "dataTransformerMethod": {
-                    "name": "Pairs List Data Transformer",
-                    "implementingClass": "de.rwthaachen.openlap.visualizers.googlecharts.DataTransformerPairList"
-                  }
-                }
-              ]
-            }
-          ]
-        }       
+          "name": "Pie Chart",
+          "implementingClass": "de.rwthaachen.openlap.visualizers.googlecharts.PieChart",
+          "dataTransformerMethod": {
+            "name": "Pairs List Data Transformer",
+            "implementingClass": "de.rwthaachen.openlap.visualizers.googlecharts.DataTransformerPairList"
+          }
+        },
+        {
+          "name": "Bar Chart",
+          "implementingClass": "de.rwthaachen.openlap.visualizers.googlecharts.BarChart",
+          "dataTransformerMethod": {
+            "name": "Pairs List Data Transformer",
+            "implementingClass": "de.rwthaachen.openlap.visualizers.googlecharts.DataTransformerPairList"
+          }
+        }
+      ]
+    }
+  ]
+}
 ```
