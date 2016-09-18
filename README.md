@@ -87,7 +87,7 @@ The `DataTransformer` interface class provides a single method `transformData()`
 
 The concept of the abstract `VisualizationCodeGenerator` class and the `DataTransformer` interface should be clear from the above description. In the `VisualizationCodeGenerator` class the developer defines the input `OLAPDataSet` column configuration, the core logic to generate the “Visualization Generation Script”, and provide “Visualization Library Script”. Whereas, in the `DataTransformer` the developer implement the conversion of input `OLAPDataSet` to suitable data structure which can be used to generate “Visualization Generation Script” in the `VisualizationCodeGenerator` class. So the important point here is that the input `OLAPDataSet` is defined in the `VisualizationCodeGenerator` class but it is not used there. It is used in the `DataTransformer` and the transformed data from this interface class is then used in the `VisualizationCodeGenerator`.
 
-## Step by step guide to implement a new Analytics Method
+## Step by step guide to implement a new Visualization Method
 
 The following steps must be followed by the developer to implement a new Analytics Method for the OpenLAP:
 
