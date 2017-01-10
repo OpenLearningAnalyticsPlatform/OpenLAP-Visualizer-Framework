@@ -56,7 +56,7 @@ To implement a new visualization technique, the developer must extend the abstra
 ### OpenLAP-DataSet
 The OpenLAP-DataSet is the internal data exchange format used in the OpenLAP. It is a modular JSON based serializable dataset to validate and exchange data between different components of the OpenLAP. Since the modular approach is used to develop the OpenLAP, different components act with relative independence from each other. Thus, a data exchange model is needed which can easily be serialized to and from JSON.
 
-The OpenLAP-DataSet is implemented under the class name `OpenLAPDataSet`. It is a collection of columns represented using the class `OLAPDataColumns`. Each column consists of two distinctive sections. A metadata section contains id, type, required flag, title and description of the column encapsulated in a class `OLAPColumnConfigurationData`. The second section is the data itself, represented as an array of the specified type. More details are available on the [OpenLAP-DataSet project](https://github.com/OpenLearningAnalyticsPlatform/OpenLAP-DataSet) page. Concrete examples to initialize and read data from OpenLAP-DataSet is given below in step by step guide to implement a new Visualization Technique.
+The OpenLAP-DataSet is implemented under the class name `OpenLAPDataSet`. It is a collection of columns represented using the class `OpenLAPDataColumns`. Each column consists of two distinctive sections. A metadata section contains id, type, required flag, title and description of the column encapsulated in a class `OLAPColumnConfigurationData`. The second section is the data itself, represented as an array of the specified type. More details are available on the [OpenLAP-DataSet project](https://github.com/OpenLearningAnalyticsPlatform/OpenLAP-DataSet) page. Concrete examples to initialize and read data from OpenLAP-DataSet is given below in step by step guide to implement a new Visualization Technique.
 
 ### Methods of the `VisualizationCodeGenerator` abstract class
 The `VisualizationCodeGenerator` abstract class has a series of methods that allows new classes that extend it to be used by the OpenLAP.
@@ -188,18 +188,18 @@ public class BarChart extends VisualizationCodeGenerator {
 The input `OpenLAPDataSet` should be defined in the `initializeDataSetConfiguration()` method of the extended class `BarChart` as shown in the example below.
 
 ```java
-// Declaration of input OpenLAPDataSet by adding OLAPDataColum objects with the OLAPDataColumnFactory
+// Declaration of input OpenLAPDataSet by adding OLAPDataColum objects with the OpenLAPDataColumnFactory
 @Override
 protected void initializeDataSetConfiguration() {
     this.setInput(new OpenLAPDataSet());
     try {
-        this.getInput().addOLAPDataColumn(
-                OLAPDataColumnFactory.createOLAPDataColumnOfType("xAxisStrings", OLAPColumnDataType.STRING, true, "X-Axis Items", "List of items as string to be displayed on the X-Axis of the graph")
+        this.getInput().addOpenLAPDataColumn(
+                OpenLAPDataColumnFactory.createOpenLAPDataColumnOfType("xAxisStrings", OpenLAPColumnDataType.STRING, true, "X-Axis Items", "List of items as string to be displayed on the X-Axis of the graph")
         );
-        this.getInput().addOLAPDataColumn(
-                OLAPDataColumnFactory.createOLAPDataColumnOfType("yAxisValues", OLAPColumnDataType.INTEGER, true, "Y-Axis Values", "List of items as integer to be displayed on the Y-Axis of the graph")
+        this.getInput().addOpenLAPDataColumn(
+                OpenLAPDataColumnFactory.createOpenLAPDataColumnOfType("yAxisValues", OpenLAPColumnDataType.INTEGER, true, "Y-Axis Values", "List of items as integer to be displayed on the Y-Axis of the graph")
         );
-    } catch (OLAPDataColumnException e) {
+    } catch (OpenLAPDataColumnException e) {
         e.printStackTrace();
     }
 }
@@ -211,13 +211,13 @@ In the project create a class that implements the `DataTransformer` interface cl
 ```java
 package de.rwthaachen.openlap.visualizers.googlecharts;
 
-import DataSet.OpenLAPDataSet;
+import de.rwthaachen.openlap.dataset.OpenLAPDataSet;
 import de.rwthaachen.openlap.visualizer.framework.DataTransformer;
 import de.rwthaachen.openlap.visualizer.framework.exceptions.UnTransformableData;
 import de.rwthaachen.openlap.visualizer.framework.model.TransformedData;
 
 public class DataTransformerPairList implements DataTransformer {
-    public TransformedData<?> transformData(OpenLAPDataSet OpenLAPDataSet) throws UnTransformableData {
+    public TransformedData<?> transformData(OpenLAPDataSet openLAPDataSet) throws UnTransformableData {
 		...
     } 
 }
@@ -227,8 +227,8 @@ public class DataTransformerPairList implements DataTransformer {
 The `DataTransformer` interface class provide only one method to be implemented. The example below shows a sample implementation of the data transformer which accepts the input `OpenLAPDataSet` defined in the `initializeDataSetConfiguration()` method of the extended class `BarChart` in Step 4. This data transformer will transform this input `OpenLAPDataSet` in a list of string and integer pairs (`List<Pair<String, Integer>>`) and return it as an object of `TransformedData` class.
 
 ```java
-public TransformedData<?> transformData(OpenLAPDataSet OpenLAPDataSet) throws UnTransformableData {
-    List<OLAPDataColumn> columns = OpenLAPDataSet.getColumnsAsList(true);
+public TransformedData<?> transformData(OpenLAPDataSet openLAPDataSet) throws UnTransformableData {
+    List<OpenLAPDataColumn> columns = openLAPDataSet.getColumnsAsList(true);
     List<Pair<String, Integer>> data = new ArrayList<Pair<String, Integer>>();
 
     List<String> labels = null;
@@ -236,8 +236,8 @@ public TransformedData<?> transformData(OpenLAPDataSet OpenLAPDataSet) throws Un
 
     //Storing the data of column type string into labels list and the data of column type integer into frequencies list
     //The reason for storing them in List is to access those using indexes 
-    for(OLAPDataColumn column: columns) {
-        if (column.getConfigurationData().getType().equals(OLAPColumnDataType.INTEGER)) {
+    for(OpenLAPDataColumn column: columns) {
+        if (column.getConfigurationData().getType().equals(OpenLAPColumnDataType.INTEGER)) {
             frequencies = column.getData();
         } else {
             labels = column.getData();
