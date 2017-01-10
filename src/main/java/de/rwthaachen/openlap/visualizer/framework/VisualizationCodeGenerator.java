@@ -1,11 +1,11 @@
 package de.rwthaachen.openlap.visualizer.framework;
 
-import DataSet.OLAPDataSet;
-import DataSet.OLAPDataSetConfigurationValidationResult;
-import DataSet.OLAPPortConfiguration;
-import DataSet.OLAPPortMapping;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.rwthaachen.openlap.dataset.OpenLAPDataSet;
+import de.rwthaachen.openlap.dataset.OpenLAPDataSetConfigValidationResult;
+import de.rwthaachen.openlap.dataset.OpenLAPPortConfig;
+import de.rwthaachen.openlap.dataset.OpenLAPPortMapping;
 import de.rwthaachen.openlap.visualizer.framework.exceptions.DataSetValidationException;
 import de.rwthaachen.openlap.visualizer.framework.exceptions.UnTransformableData;
 import de.rwthaachen.openlap.visualizer.framework.exceptions.VisualizationCodeGenerationException;
@@ -22,8 +22,8 @@ import java.util.Map;
  */
 public abstract class VisualizationCodeGenerator {
 
-    private OLAPDataSet input;
-    private OLAPDataSet output;
+    private OpenLAPDataSet input;
+    private OpenLAPDataSet output;
 
     protected abstract void initializeDataSetConfiguration();
 
@@ -31,24 +31,24 @@ public abstract class VisualizationCodeGenerator {
 
     protected abstract String visualizationLibraryScript();
 
-    public boolean isDataProcessable(OLAPPortConfiguration olapPortConfiguration) throws DataSetValidationException {
+    public boolean isDataProcessable(OpenLAPPortConfig openlapPortConfig) throws DataSetValidationException {
         if (input == null)
             initializeDataSetConfiguration();
 
-        OLAPDataSetConfigurationValidationResult validationResult = input.validateConfiguration(olapPortConfiguration);
+        OpenLAPDataSetConfigValidationResult validationResult = input.validateConfiguration(openlapPortConfig);
         if (validationResult.isValid())
             return true;
         else
             throw new DataSetValidationException(validationResult.getValidationMessage());
     }
 
-    public String generateVisualizationCode(OLAPDataSet olapDataSet, OLAPPortConfiguration portConfiguration, DataTransformer dataTransformer, Map<String, Object> additionalParams) throws VisualizationCodeGenerationException, UnTransformableData, DataSetValidationException {
+    public String generateVisualizationCode(OpenLAPDataSet olapDataSet, OpenLAPPortConfig portConfig, DataTransformer dataTransformer, Map<String, Object> additionalParams) throws VisualizationCodeGenerationException, UnTransformableData, DataSetValidationException {
         if (input == null)
             initializeDataSetConfiguration();
         // is the configuration valid?
-        if(isDataProcessable(portConfiguration)) {
+        if(isDataProcessable(portConfig)) {
             // for each configuration element of the configuration
-            for (OLAPPortMapping mappingEntry:portConfiguration.getMapping()) {
+            for (OpenLAPPortMapping mappingEntry:portConfig.getMapping()) {
                 // map the data of the column c.id==element.id to the input
                 input.getColumns().get(mappingEntry.getInputPort().getId()).setData(olapDataSet.getColumns().get(mappingEntry.getOutputPort().getId()).getData());
             }
@@ -66,17 +66,17 @@ public abstract class VisualizationCodeGenerator {
         return visualizationLibraryScript();
     }
 
-    public OLAPDataSet getInput() {
+    public OpenLAPDataSet getInput() {
         if (input == null)
             initializeDataSetConfiguration();
         return input;
     }
 
-    public void setInput(OLAPDataSet input) {
+    public void setInput(OpenLAPDataSet input) {
         this.input = input;
     }
 
-    public OLAPDataSet getOutput() {
+    public OpenLAPDataSet getOutput() {
         return output;
     }
 
@@ -101,7 +101,7 @@ public abstract class VisualizationCodeGenerator {
 
     }
 
-    public void setOutput(OLAPDataSet output) {
+    public void setOutput(OpenLAPDataSet output) {
         this.output = output;
     }
 }
