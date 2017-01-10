@@ -1,7 +1,7 @@
 package de.rwthaachen.openlap.visualizer.framework.model;
 
 /**
- * Class which serves as a general model to hold the data transformed by a DataTransformer from a OLAPDataSet into
+ * Class which serves as a general model to hold the data transformed by a DataTransformer from a OpenLAPDataSet into
  * an instance of this class
  *
  * @author Bassim Bashir

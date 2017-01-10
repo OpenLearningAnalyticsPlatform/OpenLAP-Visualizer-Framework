@@ -12,11 +12,11 @@ import de.rwthaachen.openlap.visualizer.framework.model.TransformedData;
 public interface DataTransformer {
 
     /**
-     * @param olapDataSet The dataset which needs to be transformed in a
+     * @param openLAPDataSet The dataset which needs to be transformed in a
      *                    dataset that is understood by the visualization code
      * @return null if the data could not be transformed
      */
-    TransformedData<?> transformData(OpenLAPDataSet olapDataSet) throws UnTransformableData;
+    TransformedData<?> transformData(OpenLAPDataSet openLAPDataSet) throws UnTransformableData;
 
 }
 

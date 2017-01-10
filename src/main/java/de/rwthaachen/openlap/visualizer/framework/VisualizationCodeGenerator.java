@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * The abstract class which needs to be extended in order to add new concrete visualization methods
- * The abstract method "initializeDataSetConfiguration" should be overriden with the input OLAPDataSet configuration for the visualization method being implemented.
+ * The abstract method "initializeDataSetConfiguration" should be overriden with the input OpenLAPDataSet configuration for the visualization method being implemented.
  * Furthermore, the overriden method "visualizationCode" method should return the actual client visualization code
  *
  * @author Bassim Bashir
@@ -42,7 +42,7 @@ public abstract class VisualizationCodeGenerator {
             throw new DataSetValidationException(validationResult.getValidationMessage());
     }
 
-    public String generateVisualizationCode(OpenLAPDataSet olapDataSet, OpenLAPPortConfig portConfig, DataTransformer dataTransformer, Map<String, Object> additionalParams) throws VisualizationCodeGenerationException, UnTransformableData, DataSetValidationException {
+    public String generateVisualizationCode(OpenLAPDataSet openLAPDataSet, OpenLAPPortConfig portConfig, DataTransformer dataTransformer, Map<String, Object> additionalParams) throws VisualizationCodeGenerationException, UnTransformableData, DataSetValidationException {
         if (input == null)
             initializeDataSetConfiguration();
         // is the configuration valid?
@@ -50,7 +50,7 @@ public abstract class VisualizationCodeGenerator {
             // for each configuration element of the configuration
             for (OpenLAPPortMapping mappingEntry:portConfig.getMapping()) {
                 // map the data of the column c.id==element.id to the input
-                input.getColumns().get(mappingEntry.getInputPort().getId()).setData(olapDataSet.getColumns().get(mappingEntry.getOutputPort().getId()).getData());
+                input.getColumns().get(mappingEntry.getInputPort().getId()).setData(openLAPDataSet.getColumns().get(mappingEntry.getOutputPort().getId()).getData());
             }
             TransformedData<?> transformedData = dataTransformer.transformData(input);
             if (transformedData == null)

@@ -40,13 +40,13 @@ The main idea behind the Visualizer is to receive the incoming analyzed data in 
 </script>
 ```
 
-The code consists of two main section, the `Visualization Library Script` section responsible for including the visualization library scripts on the webpage and the `Visualization Generation Script` section containing the code to generate the chart. The `Visualization Generation Script` section is further divided into three sub-sections: the `Visualization data` sub-section consists of the data to generate the graph. This section should always be generated dynamically based on the input data coming in the input `OLAPDataSet`. The `Visualization options` sub-section contains the options to define the chart. Which parameters can be customized is explained later in the step by step guide to implement new visualization technique. The `Visualization generation` section contains the scripts which uses the data and the options to generate the chart. This example is specifically using Google Charts to explain the concept, but any visualization technique can be categorized into these sections and implemented. 
+The code consists of two main section, the `Visualization Library Script` section responsible for including the visualization library scripts on the webpage and the `Visualization Generation Script` section containing the code to generate the chart. The `Visualization Generation Script` section is further divided into three sub-sections: the `Visualization data` sub-section consists of the data to generate the graph. This section should always be generated dynamically based on the input data coming in the input `OpenLAPDataSet`. The `Visualization options` sub-section contains the options to define the chart. Which parameters can be customized is explained later in the step by step guide to implement new visualization technique. The `Visualization generation` section contains the scripts which uses the data and the options to generate the chart. This example is specifically using Google Charts to explain the concept, but any visualization technique can be categorized into these sections and implemented.
 
 Before going further into the details, here is a list of terminologies which will be helpful to understand this guide and how they are interacting with each other:
 
 * <strong>VisualizationFramework</strong>: A web visualization library or framework which can be utilized to create interactive visualizations. E.g. D3.js, Google Charts, dygraphs etc.
 
-* <strong>DataTransformer</strong>: A concrete implementation which transforms data received from the client in the form of the `OLAPDataSet` into a data structure understandable by the VisualizationMethod that uses it.
+* <strong>DataTransformer</strong>: A concrete implementation which transforms data received from the client in the form of the `OpenLAPDataSet` into a data structure understandable by the VisualizationMethod that uses it.
 
 * <strong>VisualizationMethod</strong>: A concrete interactive visualization type. E.g. bar chart, pie chart etc.
 
@@ -56,36 +56,36 @@ To implement a new visualization technique, the developer must extend the abstra
 ### OpenLAP-DataSet
 The OpenLAP-DataSet is the internal data exchange format used in the OpenLAP. It is a modular JSON based serializable dataset to validate and exchange data between different components of the OpenLAP. Since the modular approach is used to develop the OpenLAP, different components act with relative independence from each other. Thus, a data exchange model is needed which can easily be serialized to and from JSON.
 
-The OpenLAP-DataSet is implemented under the class name `OLAPDataSet`. It is a collection of columns represented using the class `OLAPDataColumns`. Each column consists of two distinctive sections. A metadata section contains id, type, required flag, title and description of the column encapsulated in a class `OLAPColumnConfigurationData`. The second section is the data itself, represented as an array of the specified type. More details are available on the [OpenLAP-DataSet project](https://github.com/OpenLearningAnalyticsPlatform/OpenLAP-DataSet) page. Concrete examples to initialize and read data from OpenLAP-DataSet is given below in step by step guide to implement a new Visualization Technique.
+The OpenLAP-DataSet is implemented under the class name `OpenLAPDataSet`. It is a collection of columns represented using the class `OLAPDataColumns`. Each column consists of two distinctive sections. A metadata section contains id, type, required flag, title and description of the column encapsulated in a class `OLAPColumnConfigurationData`. The second section is the data itself, represented as an array of the specified type. More details are available on the [OpenLAP-DataSet project](https://github.com/OpenLearningAnalyticsPlatform/OpenLAP-DataSet) page. Concrete examples to initialize and read data from OpenLAP-DataSet is given below in step by step guide to implement a new Visualization Technique.
 
 ### Methods of the `VisualizationCodeGenerator` abstract class
 The `VisualizationCodeGenerator` abstract class has a series of methods that allows new classes that extend it to be used by the OpenLAP.
 
 #### Implemented Methods
 
-* The ` isDataProcessable()` method takes an `OLAPPortConfiguration` as parameter and validate if the `OLAPDataSet` with the specified configuration can be processed or not.
+* The ` isDataProcessable()` method takes an `OLAPPortConfiguration` as parameter and validate if the `OpenLAPDataSet` with the specified configuration can be processed or not.
 
-* The `generateVisualizationCode()` method takes an `OLAPDataSet`, an `OLAPPortConfiguration` and a `DataTransformer` as parameters. The incoming `OLAPDataSet` is used as an input data which is transformed using the `DataTransformer` if the `OLAPPortConfiguration` is valid. The transformed data is then processed using the `visualizationCode()` method to produce the “Visualization Generation Script” (as discussed in the Fundamental Concepts section).
+* The `generateVisualizationCode()` method takes an `OpenLAPDataSet`, an `OLAPPortConfiguration` and a `DataTransformer` as parameters. The incoming `OpenLAPDataSet` is used as an input data which is transformed using the `DataTransformer` if the `OLAPPortConfiguration` is valid. The transformed data is then processed using the `visualizationCode()` method to produce the “Visualization Generation Script” (as discussed in the Fundamental Concepts section).
 
 * The `getVisualizationLibraryScript()` method returns the “Visualization Library Script” (as discussed in the Fundamental Concepts section) by calling the `visualizationLibraryScript()` method. 
 
-* The `getInput()` method allow other classes to obtain the input `OLAPDataSet` which can be used to get the columns metadata as `OLAPColumnConfigurationData` class.
+* The `getInput()` method allow other classes to obtain the input `OpenLAPDataSet` which can be used to get the columns metadata as `OLAPColumnConfigurationData` class.
 
 #### Abstract Methods
 
-* The `initializeDataSetConfiguration()` method is where the developer will define the column configuration of the input  `OLAPDataSet`.
+* The `initializeDataSetConfiguration()` method is where the developer will define the column configuration of the input  `OpenLAPDataSet`.
 
 * The `visualizationCode()` is the core method where the developer will implement the logic to convert the data transformed using the `DataTransformer` in the “Visualization Generation Script” which is returned as a string. This method is called by the `generateVisualizationCode()` method described above.
 
 * The `visualizationLibraryScript()` method is where the developer will provide the “Visualization Library Script” section of the implementing visualization technique.
 
 ### Methods of the `DataTransformer` interface class
-The `DataTransformer` interface class provides a single method `transformData()` to be implemented which accept the `OLAPDataSet` as input parameter. The developers will implement the logic here to transform the incoming `OLAPDataSet` to any data structure which will be used by the `visualizationCode()` method of the ‘VisualizationCodeGenerator’ abstract class to generate the “Visualization Generation Script”. The return of this method is a class `TransformedData<T>` which contains a single object `dataContent` of type `<T>` to store the transformed data.
+The `DataTransformer` interface class provides a single method `transformData()` to be implemented which accept the `OpenLAPDataSet` as input parameter. The developers will implement the logic here to transform the incoming `OpenLAPDataSet` to any data structure which will be used by the `visualizationCode()` method of the ‘VisualizationCodeGenerator’ abstract class to generate the “Visualization Generation Script”. The return of this method is a class `TransformedData<T>` which contains a single object `dataContent` of type `<T>` to store the transformed data.
 
 
 ### Important Note
 
-The concept of the abstract `VisualizationCodeGenerator` class and the `DataTransformer` interface should be clear from the above description. In the `VisualizationCodeGenerator` class the developer defines the input `OLAPDataSet` column configuration, the core logic to generate the “Visualization Generation Script”, and provide “Visualization Library Script”. Whereas, in the `DataTransformer` the developer implement the conversion of input `OLAPDataSet` to suitable data structure which can be used to generate “Visualization Generation Script” in the `VisualizationCodeGenerator` class. So the important point here is that the input `OLAPDataSet` is defined in the `VisualizationCodeGenerator` class but it is not used there. It is used in the `DataTransformer` and the transformed data from this interface class is then used in the `VisualizationCodeGenerator`.
+The concept of the abstract `VisualizationCodeGenerator` class and the `DataTransformer` interface should be clear from the above description. In the `VisualizationCodeGenerator` class the developer defines the input `OpenLAPDataSet` column configuration, the core logic to generate the “Visualization Generation Script”, and provide “Visualization Library Script”. Whereas, in the `DataTransformer` the developer implement the conversion of input `OpenLAPDataSet` to suitable data structure which can be used to generate “Visualization Generation Script” in the `VisualizationCodeGenerator` class. So the important point here is that the input `OpenLAPDataSet` is defined in the `VisualizationCodeGenerator` class but it is not used there. It is used in the `DataTransformer` and the transformed data from this interface class is then used in the `VisualizationCodeGenerator`.
 
 ## Step by step guide to implement a new Visualization Method
 
@@ -97,7 +97,7 @@ The following steps must be followed by the developer to implement a new Analyti
 
 3. Create a class that extends the `VisualizationCodeGenerator` class.
 
-4. Define the input `OLAPDataSet`.
+4. Define the input `OpenLAPDataSet`.
 
 5. Create a class that implements the `DataTransformer` interface.
 
@@ -184,14 +184,14 @@ public class BarChart extends VisualizationCodeGenerator {
     }
 }
 ```
-### Step 4. Define the input `OLAPDataSet`.
-The input `OLAPDataSet` should be defined in the `initializeDataSetConfiguration()` method of the extended class `BarChart` as shown in the example below.
+### Step 4. Define the input `OpenLAPDataSet`.
+The input `OpenLAPDataSet` should be defined in the `initializeDataSetConfiguration()` method of the extended class `BarChart` as shown in the example below.
 
 ```java
-// Declaration of input OLAPDataSet by adding OLAPDataColum objects with the OLAPDataColumnFactory
+// Declaration of input OpenLAPDataSet by adding OLAPDataColum objects with the OLAPDataColumnFactory
 @Override
 protected void initializeDataSetConfiguration() {
-    this.setInput(new OLAPDataSet());
+    this.setInput(new OpenLAPDataSet());
     try {
         this.getInput().addOLAPDataColumn(
                 OLAPDataColumnFactory.createOLAPDataColumnOfType("xAxisStrings", OLAPColumnDataType.STRING, true, "X-Axis Items", "List of items as string to be displayed on the X-Axis of the graph")
@@ -211,24 +211,24 @@ In the project create a class that implements the `DataTransformer` interface cl
 ```java
 package de.rwthaachen.openlap.visualizers.googlecharts;
 
-import DataSet.OLAPDataSet;
+import DataSet.OpenLAPDataSet;
 import de.rwthaachen.openlap.visualizer.framework.DataTransformer;
 import de.rwthaachen.openlap.visualizer.framework.exceptions.UnTransformableData;
 import de.rwthaachen.openlap.visualizer.framework.model.TransformedData;
 
 public class DataTransformerPairList implements DataTransformer {
-    public TransformedData<?> transformData(OLAPDataSet olapDataSet) throws UnTransformableData {
+    public TransformedData<?> transformData(OpenLAPDataSet OpenLAPDataSet) throws UnTransformableData {
 		...
     } 
 }
 ```
 
 ### Step 6. Implement the method of the `DataTransformer` interface.
-The `DataTransformer` interface class provide only one method to be implemented. The example below shows a sample implementation of the data transformer which accepts the input `OLAPDataSet` defined in the `initializeDataSetConfiguration()` method of the extended class `BarChart` in Step 4. This data transformer will transform this input `OLAPDataSet` in a list of string and integer pairs (`List<Pair<String, Integer>>`) and return it as an object of `TransformedData` class.
+The `DataTransformer` interface class provide only one method to be implemented. The example below shows a sample implementation of the data transformer which accepts the input `OpenLAPDataSet` defined in the `initializeDataSetConfiguration()` method of the extended class `BarChart` in Step 4. This data transformer will transform this input `OpenLAPDataSet` in a list of string and integer pairs (`List<Pair<String, Integer>>`) and return it as an object of `TransformedData` class.
 
 ```java
-public TransformedData<?> transformData(OLAPDataSet olapDataSet) throws UnTransformableData {
-    List<OLAPDataColumn> columns = olapDataSet.getColumnsAsList(true);
+public TransformedData<?> transformData(OpenLAPDataSet OpenLAPDataSet) throws UnTransformableData {
+    List<OLAPDataColumn> columns = OpenLAPDataSet.getColumnsAsList(true);
     List<Pair<String, Integer>> data = new ArrayList<Pair<String, Integer>>();
 
     List<String> labels = null;
