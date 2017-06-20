@@ -49,12 +49,7 @@ Before going further into the details, here is a list of terminologies which wil
 * <strong>VisualizationMethod</strong>: A concrete interactive visualization type. E.g. bar chart, pie chart etc.
 
 
-To implement a new visualization technique, the developer must extend the abstract class `VisualizationCodeGenerator` and an interface `DataTransformer` available in the OpenLAP-Visualizer-Framework project. In the following sub-sections the OpenLAP-DataSet and the methods of these classes are explained in detail.
-
-### OpenLAP-DataSet
-The OpenLAP-DataSet is the internal data exchange format used in the OpenLAP. It is a modular JSON based serializable dataset to validate and exchange data between different components of the OpenLAP. Since the modular approach is used to develop the OpenLAP, different components act with relative independence from each other. Thus, a data exchange model is needed which can easily be serialized to and from JSON.
-
-The OpenLAP-DataSet is implemented under the class name `OpenLAPDataSet`. It is a collection of columns represented using the class `OpenLAPDataColumns`. Each column consists of two distinctive sections. A metadata section contains id, type, required flag, title and description of the column encapsulated in a class `OLAPColumnConfigurationData`. The second section is the data itself, represented as an array of the specified type. More details are available on the [OpenLAP-DataSet project](https://github.com/OpenLearningAnalyticsPlatform/OpenLAP-DataSet) page. Concrete examples to initialize and read data from OpenLAP-DataSet is given below in step by step guide to implement a new Visualization Technique.
+To implement a new visualization technique, the developer must extend the abstract class `VisualizationCodeGenerator` and an interface `DataTransformer` available in the OpenLAP-Visualizer-Framework project. 
 
 ### Methods of the `VisualizationCodeGenerator` abstract class
 The `VisualizationCodeGenerator` abstract class has a series of methods that allows new classes that extend it to be used by the OpenLAP.
