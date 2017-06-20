@@ -1,7 +1,5 @@
 ## INTRODUCTION
-The Open Learning Analytics Platform (OpenLAP) supports extensibility and modularity by allowing developers and researches to add new Analytics Methods, Visualizations Techniques and Analytics Modules. The OpenLAP follows a simple principle of Inversion of Control: Once the new component is implemented and the binaries are uploaded, it is possible for the OpenLAP to use it at runtime, allowing developers and researches to extend the functionalities of the OpenLAP. 
-
-The Visualizer component is responsible for managing the repository of all available visualization techniques in the OpenLAP. The OpenLAP-Visualizer-Framework project contains the necessary classes that the developers can extend, implement, pack in JAR and upload to add new visualization technique to the OpenLAP. The following video gives the introduction to the OpenLAP followed by the tutorial to add new visualization technique to the OpenLAP.
+The following video gives the introduction to the OpenLAP followed by the tutorial to add new visualization technique to the OpenLAP.
 
 <p align="center">
 	<a href="http://www.youtube.com/watch?feature=player_embedded&v=e6dwtO0mneo" target="_blank">
